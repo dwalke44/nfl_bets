@@ -1,0 +1,29 @@
+SELECT S.* FROM NFL.SCORES S WHERE S.schedule_season = '2011';
+
+PRAGMA table_info(SCORES);
+
+DROP TABLE NFL.GB08_11;
+
+SELECT S.*
+FROM NFL.SCORES S
+WHERE S.SCHEDULE_SEASON in ('2008', '2009', '2010', '2011')
+AND (S.team_home = 'Green Bay Packers' OR 
+     S.team_away = 'Green Bay Packers')
+AND SCHEDULE_WEEK <> 'Division';
+
+CREATE TABLE NFL.GB08_11 AS
+SELECT G.*,
+       CASE WHEN G.TEAM_HOME = 'Green Bay Packers' then 1 else 0 end as HOME_FLAG,
+       CASE WHEN G.TEAM_FAVORITE_ID = 'GB' then 1 else 0 end as FAVORITE_FLAG,
+       CASE WHEN G.TEAM_HOME = 'Green Bay Packers' then g.score_home else g.score_away end as GB_SCORE,
+       CASE WHEN G.TEAM_HOME <> 'Green Bay Packers' then g.score_home else g.score_away end as OPP_SCORE,
+       G.SCORE_HOME + G.SCORE_AWAY AS TOTAL_SCORE  
+FROM (SELECT S.*
+      FROM NFL.SCORES S 
+      WHERE S.SCHEDULE_SEASON in ('2008', '2009', '2010', '2011')
+      AND (S.team_home = 'Green Bay Packers' OR 
+           S.team_away = 'Green Bay Packers')
+      AND SCHEDULE_WEEK <> 'Division') G
+; 
+    
+SELECT * FROM GB08_11;

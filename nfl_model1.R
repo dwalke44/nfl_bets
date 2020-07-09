@@ -4,29 +4,61 @@ library(tidyverse)
 library(lubridate)
 setwd("~/Projects/acipenser/nfl_bets")
 
-con = dbConnect(RSQLite::SQLite(),
-                dbname = "nfl.db")
-tbls = dbListTables(con)
-stadiums = as_tibble(dbGetQuery(con, "SELECT * FROM stadiums;"))
-teams = as_tibble(dbGetQuery(con, "SELECT * FROM TEAMS;"))
-scores = as_tibble(dbGetQuery(con, "SELECT * FROM scores;"))
-team_key = as_tibble(dbGetQuery(con, "SELECT * FROM TEAM_ABBREV;"))
+# LOAD TOTAL DATA FROM DB
+# con = dbConnect(RSQLite::SQLite(),
+#                 dbname = "nfl.db")
+# tbls = dbListTables(con)
+# stadiums = as_tibble(dbGetQuery(con, "SELECT * FROM stadiums;"))
+# teams = as_tibble(dbGetQuery(con, "SELECT * FROM TEAMS;"))
+# scores = as_tibble(dbGetQuery(con, "SELECT * FROM scores;"))
+# team_key = as_tibble(dbGetQuery(con, "SELECT * FROM TEAM_ABBREV;"))
+# dbDisconnect(con)
+
+# -------------------------------------------------------------------------------
+# TODO:
+#     + stratified sample training and test by schedule season & schedule week
+#     + lag win percentage (last 5/10/20 games)
+#     + distance away team has traveled 
+#     + predictors = something available prior to kickoff!
+#     + join stadium to scores by season yr & home team
+#     + calculate distance away team traveled as new predictor
+#     + calculate lag win percentages for both teams
+# -------------------------------------------------------------------------------
+
+# GB TOY DATA - **FIRST MODEL YEAR = 2010**
+# IMPORT TOY DATASET
+dbpath = "C:\\Users\\danwa\\Documents\\Projects\\acipenser\\nfl_bets\\nfl.db"
+con = dbConnect(RSQLite::SQLite(), dbname = dbpath)
+gb08 = as_tibble(dbGetQuery(con, "SELECT S.*
+                                  FROM SCORES S
+                                  WHERE S.SCHEDULE_SEASON = '2008'
+                                  AND (S.team_home = 'Green Bay Packers' OR 
+                                       S.team_away = 'Green Bay Packers')
+                                  AND SCHEDULE_WEEK <> 'Division';"))
+
+gb09 = as_tibble(dbGetQuery(con, "SELECT S.*
+                                  FROM SCORES S
+                                  WHERE S.SCHEDULE_SEASON = '2009'
+                                  AND (S.team_home = 'Green Bay Packers' OR 
+                                       S.team_away = 'Green Bay Packers')
+                                  AND SCHEDULE_WEEK <> 'Division';"))
+
+gb10 = as_tibble(dbGetQuery(con, "SELECT S.*
+                                  FROM SCORES S
+                                  WHERE S.SCHEDULE_SEASON = '2010'
+                                  AND (S.team_home = 'Green Bay Packers' OR 
+                                       S.team_away = 'Green Bay Packers')
+                                  AND SCHEDULE_WEEK <> 'Division';"))
+gb11 = as_tibble(dbGetQuery(con, "SELECT S.*
+                                  FROM SCORES S
+                                  WHERE S.SCHEDULE_SEASON = '2011'
+                                  AND (S.team_home = 'Green Bay Packers' OR 
+                                       S.team_away = 'Green Bay Packers')
+                                  AND SCHEDULE_WEEK <> 'Division';"))
+gb = as_tibble(dbGetQuery(con, "SELECT * FROM GB08_11;"))
 dbDisconnect(con)
-# -------------------------------------------------------------------------------
-# TODO:  stratified sample training and test by schedule season & schedule week
-#        lag win percentage (last 5/10/20 games)
-#        distance away team has traveled 
-#        predictors = something available prior to kickoff!
-# -------------------------------------------------------------------------------
 
-
-# join stadium to scores by season yr & home team
-# calculate distance away team traveled as new predictor
-
-
-
-# calculate lag win percentages for both teams
-
+# CREATE LAG VARIABLE
 
 
 # -------------------------------------------------------------------------------
