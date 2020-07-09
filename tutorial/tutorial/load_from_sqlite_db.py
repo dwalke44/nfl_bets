@@ -1,3 +1,7 @@
+"""
+Includes fetch_friday function and raw data import
+"""
+
 import sqlite3
 import pandas as pd
 import os
@@ -12,6 +16,7 @@ def fetch_fridays(table_name):
 
     return df
 
+
 if __name__ == '__main__':
 
     # Current working directory
@@ -21,6 +26,8 @@ if __name__ == '__main__':
     df = pd.read_sql_query("SELECT * FROM GB08_11", con)
 
     con.close()
+
+
 
 
 

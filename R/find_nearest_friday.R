@@ -43,5 +43,15 @@ gb %>% mutate(schedule_date = as_date(parse_date_time(schedule_date, c('mdy'))),
               GB_SCORE = as.integer(GB_SCORE),
               OPP_SCORE = as.integer(OPP_SCORE),
               TOTAL_SCORE = as.integer(TOTAL_SCORE)) -> gb
-gb$PREV_FRI = lastfri(gb$schedule_date)  
+gb$PREV_FRI = as.character(lastfri(gb$schedule_date))
+
+
+dbpath = "C:\\Users\\danwa\\Documents\\Projects\\acipenser\\nfl_bets\\nfl.db"
+con = dbConnect(RSQLite::SQLite(), dbname = dbpath)
+dbWriteTable(con, 'GB_WITH_FRIDAY', gb, overwrite = TRUE, append = FALSE)
+dbDisconnect(con)
+
+
+
+
 
